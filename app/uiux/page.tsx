@@ -429,33 +429,18 @@ export default function UIUXPage() {
             {portfolioProjects.map((project, index) => (
               <div
                 key={index}
-                className="group bg-gradient-to-br from-[#040422] to-[#0c0c7a]/20 rounded-2xl neon-border overflow-hidden card-hover card-3d relative"
+                className="relative rounded-2xl neon-border card-hover card-3d overflow-hidden group h-80 flex items-end"
+                style={{ backgroundImage: `url(${project.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#040422]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                    <div className="flex gap-4">
-                      <button className="p-2 bg-[#7784e4] rounded-full text-white hover:bg-[#1b1ac7] transition-colors duration-300">
-                        <ArrowRight size={16} />
-                      </button>
-                      <button className="p-2 bg-[#7784e4] rounded-full text-white hover:bg-[#1b1ac7] transition-colors duration-300">
-                        <Star size={16} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#7784e4] transition-colors duration-300">
+                {/* Overlay content, hidden by default, shown on hover */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#040422]/70 to-[#0c0c7a]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-center items-center p-8">
+                  <h3 className="text-2xl font-bold mb-2 text-white text-center">
                     {project.title}
                   </h3>
-                  <p className="text-[#b8c5ff] mb-4 leading-relaxed">
+                  <p className="text-[#b8c5ff] mb-4 leading-relaxed text-center">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {project.tech.map((tech, techIndex) => (
                       <span
                         key={techIndex}

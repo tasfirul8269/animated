@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Code, Smartphone, Zap, Shield, Globe, Database, Sparkles, Play } from 'lucide-react';
@@ -10,44 +10,205 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function WebDevelopmentPage() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const descTextRef = useRef<HTMLDivElement>(null);
+  const descCardsRef = useRef<HTMLDivElement>(null);
+  const portfolioRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
   const techRef = useRef<HTMLDivElement>(null);
+  const processRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<Array<{
+    left: number;
+    top: number;
+    animation: string;
+    animationDelay: number;
+  }>>([]);
+
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 20 }).map((_, i) => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+        animationDelay: Math.random() * 3,
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animation
-      gsap.fromTo(heroRef.current?.children || [],
-        { y: 120, opacity: 0, rotationX: 90 },
-        {
-          y: 0,
-          opacity: 1,
-          rotationX: 0,
-          duration: 1.5,
-          stagger: 0.2,
-          ease: "power3.out"
-        }
-      );
-
-      // Tech stack animation
-      gsap.fromTo(techRef.current?.children || [],
-        { y: 60, opacity: 0, scale: 0.8 },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: techRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
+      // Hero animation (UI/UX style)
+      if (heroRef.current) {
+        gsap.fromTo(heroRef.current.children,
+          { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotationX: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: 'top 80%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
           }
-        }
-      );
+        );
+      }
+      // About/Description section text
+      if (descTextRef.current) {
+        gsap.fromTo(descTextRef.current.children,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: descTextRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // About/Description section cards
+      if (descCardsRef.current) {
+        gsap.fromTo(descCardsRef.current.children,
+          { y: 50, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: descCardsRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // Portfolio cards
+      if (portfolioRef.current) {
+        gsap.fromTo(portfolioRef.current.children,
+          { y: 40, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.9,
+            stagger: 0.1,
+            delay: 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: portfolioRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // Features section
+      if (featuresRef.current) {
+        gsap.fromTo(featuresRef.current.children,
+          { y: 40, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: featuresRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // Tech stack section
+      if (techRef.current) {
+        gsap.fromTo(techRef.current.children,
+          { y: 60, opacity: 0, scale: 0.8 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: techRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+      // Process section
+      if (processRef.current) {
+        gsap.fromTo(processRef.current.children,
+          { y: 40, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: processRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
     });
 
     return () => ctx.revert();
   }, []);
+
+  // Portfolio projects (example)
+  const portfolioProjects = [
+    {
+      title: "E-Commerce Platform",
+      description: "Modern e-commerce solution with advanced features and seamless user experience.",
+      tech: ["React", "Node.js", "MongoDB"],
+      image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      title: "SaaS Dashboard",
+      description: "Comprehensive analytics dashboard with real-time data visualization.",
+      tech: ["Vue.js", "Python", "PostgreSQL"],
+      image: "https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      title: "Mobile Banking App",
+      description: "Secure and intuitive mobile banking application with modern UI.",
+      tech: ["React Native", "Firebase", "Node.js"],
+      image: "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=800"
+    }
+  ];
 
   const technologies = [
     "React", "Next.js", "Vue.js", "Angular", "Node.js", "Python",
@@ -79,38 +240,188 @@ export default function WebDevelopmentPage() {
 
   return (
     <main className="pt-20">
-      {/* Hero Section */}
-      <section className="py-20 lg:py-32 hero-bg relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div ref={heroRef} className="text-center lg:text-left space-y-8">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                <div className="gradient-text text-glow">Web</div>
+      {/* Hero Section (UI/UX style) */}
+      <section className="section-container parallax-section hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        {/* Enhanced background with particles */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#040422] via-[#0a0a0a] to-[#1a1a2e]"></div>
+        {/* Animated background particles */}
+        <div className="absolute inset-0">
+          <div className="absolute left-0 top-0 w-1/3 h-full bg-gradient-to-r from-[#1b1ac7]/20 to-transparent"></div>
+          <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-[#7784e4]/20 to-transparent"></div>
+        </div>
+        {/* Floating particles effect */}
+        <div className="absolute inset-0 overflow-hidden">
+          {particles.map((particle, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-[#7784e4] rounded-full opacity-60"
+              style={{
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animation: particle.animation,
+                animationDelay: `${particle.animationDelay}s`
+              }}
+            />
+          ))}
+        </div>
+        {/* Central glowing arc with enhanced effect */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-96 h-1 bg-gradient-to-r from-transparent via-[#7784e4] to-transparent rounded-full opacity-80 blur-sm shadow-lg shadow-[#7784e4]/50"></div>
+        </div>
+        {/* Additional glow effects */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#7784e4]/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#1b1ac7]/5 rounded-full blur-3xl"></div>
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <div ref={heroRef} className="space-y-12 max-w-5xl mx-auto">
+            <div className="space-y-8">
+              <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
+                <div className="gradient-text">Web</div>
                 <div className="text-white">Development</div>
               </h1>
-              <p className="text-xl lg:text-2xl text-[#b8c5ff] leading-relaxed">
+              <p className="text-xl lg:text-2xl xl:text-3xl text-[#b8c5ff] leading-relaxed max-w-4xl mx-auto opacity-90">
                 Building fast, scalable, and secure web applications using cutting-edge technologies and industry best practices.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                <button className="group bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] px-8 py-4 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-[#1b1ac7]/40 transition-all duration-500 flex items-center gap-3 hover:scale-105">
-                  <Sparkles size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-                  Start Your Project
-                </button>
-                <button className="group border-2 border-[#7784e4] px-8 py-4 rounded-full text-[#7784e4] font-semibold hover:bg-[#7784e4] hover:text-white transition-all duration-500 flex items-center gap-3 hover:scale-105">
-                  <Play size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  View Our Work
-                </button>
-              </div>
             </div>
-            
-            <div className="flex justify-center lg:justify-end">
-              <PlanetAnimation size="large" />
+            {/* Enhanced feature badges */}
+            <div className="flex flex-wrap justify-center gap-6 mt-12">
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Modern Stack</span>
+              </div>
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Performance</span>
+              </div>
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Security</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* About/Description Section */}
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div ref={descTextRef} className="text-center mb-16">
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+              Why <span className="gradient-text">Web Development</span> Matters
+            </h2>
+            <p className="text-xl text-[#b8c5ff] max-w-4xl mx-auto leading-relaxed">
+              We build digital products that are fast, scalable, and secure. Our approach combines modern technology, robust architecture, and a focus on user experience to deliver real business value.
+            </p>
+          </div>
+          <div ref={descCardsRef} className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Modern Technologies
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  We use the latest frameworks and tools to ensure your application is future-proof and maintainable.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  User Experience
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  Our designs are intuitive and conversion-focused, ensuring your users love every interaction.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Security & Performance
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  We prioritize security and speed, so your business and users are always protected and satisfied.
+                </p>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl p-8 border border-[#7784e4]/20">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <Code className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Custom Development</h4>
+                      <p className="text-[#b8c5ff]">Tailored solutions for your unique business needs</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <Smartphone className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Mobile Ready</h4>
+                      <p className="text-[#b8c5ff]">Responsive design for all devices and platforms</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Secure by Design</h4>
+                      <p className="text-[#b8c5ff]">Best practices for robust, secure applications</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent via-[#0c0c7a]/10 to-[#0c0c7a]/20 relative overflow-hidden">
+        {/* Background gradient for edge blending */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0c0c7a]/10 to-transparent pointer-events-none z-0"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+              Our <span className="gradient-text">Portfolio</span>
+            </h2>
+            <p className="text-xl text-[#b8c5ff] max-w-3xl mx-auto">
+              Showcasing our best work in web development and digital solutions
+            </p>
+          </div>
+          <div ref={portfolioRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {portfolioProjects.map((project, index) => (
+              <div
+                key={index}
+                className="relative rounded-2xl neon-border card-hover card-3d overflow-hidden group h-80 flex items-end"
+                style={{ backgroundImage: `url(${project.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+              >
+                {/* Overlay content, hidden by default, shown on hover */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#040422]/70 to-[#0c0c7a]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-center items-center p-8">
+                  <h3 className="text-2xl font-bold mb-2 text-white text-center">
+                    {project.title}
+                  </h3>
+                  <p className="text-[#b8c5ff] mb-4 leading-relaxed text-center">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {project.tech.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 bg-[#7784e4]/20 text-[#7784e4] text-sm rounded-full border border-[#7784e4]/30"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section (enhanced) */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -118,8 +429,7 @@ export default function WebDevelopmentPage() {
               Why Choose Our <span className="gradient-text">Development</span> Services?
             </h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div ref={featuresRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
@@ -136,7 +446,7 @@ export default function WebDevelopmentPage() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
+      {/* Tech Stack Section (enhanced) */}
       <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-[#0c0c7a]/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -147,7 +457,6 @@ export default function WebDevelopmentPage() {
               We use the latest and most reliable technologies to build your applications
             </p>
           </div>
-
           <div ref={techRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {technologies.map((tech, index) => (
               <div
@@ -161,7 +470,7 @@ export default function WebDevelopmentPage() {
         </div>
       </section>
 
-      {/* Process Section */}
+      {/* Process Section (enhanced) */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -169,8 +478,7 @@ export default function WebDevelopmentPage() {
               Development <span className="gradient-text">Process</span>
             </h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div ref={processRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { step: "01", title: "Planning", description: "Requirements analysis and project planning" },
               { step: "02", title: "Design", description: "UI/UX design and architecture planning" },

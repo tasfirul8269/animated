@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Search, TrendingUp, Target, BarChart3, Globe, Zap, Sparkles, Play } from 'lucide-react';
@@ -10,23 +10,71 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SEOPage() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const descTextRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<Array<{
+    left: number;
+    top: number;
+    animation: string;
+    animationDelay: number;
+  }>>([]);
+
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 20 }).map((_, i) => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+        animationDelay: Math.random() * 3,
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animation
-      gsap.fromTo(heroRef.current?.children || [],
-        { y: 120, opacity: 0, rotationX: 90 },
-        {
-          y: 0,
-          opacity: 1,
-          rotationX: 0,
-          duration: 1.5,
-          stagger: 0.2,
-          ease: "power3.out"
-        }
-      );
-
+      // Hero animation (like UI/UX)
+      if (heroRef.current) {
+        gsap.fromTo(heroRef.current.children,
+          { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotationX: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: 'top 80%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // About/Description section text
+      if (descTextRef.current) {
+        gsap.fromTo(descTextRef.current.children,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: descTextRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
       // Services animation
       gsap.fromTo(servicesRef.current?.children || [],
         { y: 100, opacity: 0, scale: 0.8 },
@@ -78,32 +126,137 @@ export default function SEOPage() {
 
   return (
     <main className="pt-20">
-      {/* Hero Section */}
-      <section className="py-20 lg:py-32 hero-bg relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div ref={heroRef} className="text-center lg:text-left space-y-8">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                <div className="gradient-text text-glow">SEO</div>
+      {/* Hero Section (UI/UX style) */}
+      <section className="section-container parallax-section hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        {/* Enhanced background with particles */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#040422] via-[#0a0a0a] to-[#1a1a2e]"></div>
+        {/* Animated background particles */}
+        <div className="absolute inset-0">
+          <div className="absolute left-0 top-0 w-1/3 h-full bg-gradient-to-r from-[#1b1ac7]/20 to-transparent"></div>
+          <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-[#7784e4]/20 to-transparent"></div>
+        </div>
+        {/* Floating particles effect */}
+        <div className="absolute inset-0 overflow-hidden">
+          {particles.map((particle, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-[#7784e4] rounded-full opacity-60"
+              style={{
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animation: particle.animation,
+                animationDelay: `${particle.animationDelay}s`
+              }}
+            />
+          ))}
+        </div>
+        {/* Central glowing arc with enhanced effect */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-96 h-1 bg-gradient-to-r from-transparent via-[#7784e4] to-transparent rounded-full opacity-80 blur-sm shadow-lg shadow-[#7784e4]/50"></div>
+        </div>
+        {/* Additional glow effects */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#7784e4]/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#1b1ac7]/5 rounded-full blur-3xl"></div>
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <div ref={heroRef} className="space-y-12 max-w-5xl mx-auto">
+            <div className="space-y-8">
+              <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
+                <div className="gradient-text">SEO</div>
                 <div className="text-white">Optimization</div>
               </h1>
-              <p className="text-xl lg:text-2xl text-[#b8c5ff] leading-relaxed">
+              <p className="text-xl lg:text-2xl xl:text-3xl text-[#b8c5ff] leading-relaxed max-w-4xl mx-auto opacity-90">
                 Boost your online visibility and drive organic traffic with our data-driven SEO strategies and proven methodologies.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                <button className="group bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] px-8 py-4 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-[#1b1ac7]/40 transition-all duration-500 flex items-center gap-3 hover:scale-105">
-                  <Sparkles size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-                  Get SEO Audit
-                </button>
-                <button className="group border-2 border-[#7784e4] px-8 py-4 rounded-full text-[#7784e4] font-semibold hover:bg-[#7784e4] hover:text-white transition-all duration-500 flex items-center gap-3 hover:scale-105">
-                  <Play size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  View Case Studies
-                </button>
+            </div>
+            {/* Enhanced feature badges */}
+            <div className="flex flex-wrap justify-center gap-6 mt-12">
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Data-Driven</span>
+              </div>
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Technical Excellence</span>
+              </div>
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span className="text-[#b8c5ff] font-medium">Proven Results</span>
               </div>
             </div>
-            
-            <div className="flex justify-center lg:justify-end">
-              <PlanetAnimation size="large" />
+          </div>
+        </div>
+      </section>
+
+      {/* About/Description Section */}
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div ref={descTextRef} className="text-center mb-16">
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+              Why <span className="gradient-text">SEO</span> Matters
+            </h2>
+            <p className="text-xl text-[#b8c5ff] max-w-4xl mx-auto leading-relaxed">
+              SEO is the backbone of digital visibility. Our approach combines technical expertise, content strategy, and analytics to help your business rank higher, attract more visitors, and convert them into loyal customers.
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Technical SEO Excellence
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  We ensure your website is built on a solid technical foundation, optimized for speed, mobile, and search engine crawling.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Content & Strategy
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  Our team crafts compelling content and implements strategies that engage users and drive organic growth.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                  Analytics & Results
+                </h3>
+                <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                  We track, analyze, and report on every aspect of your SEO campaign to ensure measurable success and continuous improvement.
+                </p>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl p-8 border border-[#7784e4]/20">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <Search className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Keyword Research</h4>
+                      <p className="text-[#b8c5ff]">Targeting the right audience with data-driven insights</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">On-Page Optimization</h4>
+                      <p className="text-[#b8c5ff]">Enhancing your site's content and structure for better rankings</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                      <Globe className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Technical SEO</h4>
+                      <p className="text-[#b8c5ff]">Optimizing site speed, mobile experience, and crawlability</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

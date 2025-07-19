@@ -24,61 +24,54 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-      scrolled ? 'nav-blur' : 'bg-transparent border-none'
-    }`}>
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex justify-between items-center py-4">
-          <Link href="/" className="text-2xl font-bold gradient-text text-glow">
-            NEXUS
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-white hover:text-[#7784e4] transition-colors duration-300 relative group"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#7784e4] transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
-          </div>
-
-          <button className="hidden md:block btn-primary text-sm px-6 py-2">
+    <nav className="fixed top-0 w-full z-50 flex justify-center pt-6 px-2">
+      <div className="flex items-center justify-between px-6 py-2 rounded-full bg-[#2a1850]/60 backdrop-blur-lg border border-[#a78bfa]/30 shadow-lg max-w-4xl w-full mx-2">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 font-bold text-white text-lg whitespace-nowrap">
+          <span className="text-2xl">✴️</span>
+          NEXUS
+        </Link>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex gap-8 items-center">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-white/80 hover:text-white transition font-medium"
+            >
+              {item.name}
+            </Link>
+          ))}
+          <button className="ml-4 px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold shadow hover:from-indigo-500 hover:to-purple-500 transition">
             Get Started
           </button>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-white"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </div>
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden fixed left-0 right-0 top-20 mx-auto max-w-2xl bg-[#2a1850]/60 backdrop-blur-lg border border-[#a78bfa]/30 shadow-lg rounded-2xl p-6 z-50 flex flex-col items-center gap-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="block py-2 text-white/90 hover:text-white text-lg font-medium transition"
+              onClick={() => setIsOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <button className="w-full mt-2 px-5 py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold shadow hover:from-indigo-500 hover:to-purple-500 transition">
+            Get Started
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden nav-blur rounded-lg mt-2 p-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="block py-2 text-white hover:text-[#7784e4] transition-colors duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <button className="w-full mt-4 btn-primary px-6 py-2">
-              Get Started
-            </button>
-          </div>
-        )}
-      </div>
+      )}
     </nav>
   );
 };

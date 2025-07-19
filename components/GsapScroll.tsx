@@ -1,22 +1,28 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+import { useEffect } from "react";
+import Lenis from "@studio-freight/lenis";
+// import { ScrollTrigger } from "gsap/ScrollTrigger"; // Uncomment if you want to sync with GSAP
 
 export default function GsapScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Enable smooth scrolling
-    document.documentElement.style.scrollBehavior = 'smooth';
-    
+    const lenis = new Lenis({
+      lerp: 0.35, // even faster/snappier scroll
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // If using GSAP ScrollTrigger, sync updates:
+    // lenis.on('scroll', ScrollTrigger.update);
+
     return () => {
-      // Cleanup ScrollTrigger
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      lenis.destroy();
     };
   }, []);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import GsapScroll from '../../components/GsapScroll';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
@@ -14,13 +15,34 @@ gsap.registerPlugin(ScrollTrigger);
 export default function UIUXPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const descTextRef = useRef<HTMLDivElement>(null);
+  const descCardsRef = useRef<HTMLDivElement>(null);
+  const portfolioRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  const [particles, setParticles] = useState<Array<{
+    left: number;
+    top: number;
+    animation: string;
+    animationDelay: number;
+  }>>([]);
+
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 20 }).map((_, i) => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+        animationDelay: Math.random() * 3,
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations with enhanced effects
+      // Hero animations
       if (heroRef.current) {
-        const heroElements = heroRef.current.children;
-        gsap.fromTo(heroElements,
+        gsap.fromTo(heroRef.current.children,
           { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
           {
             y: 0,
@@ -29,15 +51,38 @@ export default function UIUXPage() {
             rotationX: 0,
             duration: 1.2,
             stagger: 0.15,
-            ease: "power3.out"
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: 'top 80%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
           }
         );
       }
-
-
-
-      // Stats counter animation
+      // Stats cards
       if (statsRef.current) {
+        gsap.fromTo(statsRef.current.children,
+          { y: 40, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: statsRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+        // Stat number counter
         const statNumbers = statsRef.current.querySelectorAll('.stat-number');
         statNumbers.forEach((number, index) => {
           gsap.fromTo(number,
@@ -53,13 +98,97 @@ export default function UIUXPage() {
                 toggleActions: "play none none reverse"
               },
               onUpdate: function() {
-                number.textContent = Math.ceil(this.targets()[0].textContent);
+                number.textContent = String(Math.ceil(Number(this.targets()[0].textContent)));
               }
             }
           );
         });
       }
-
+      // Description section text
+      if (descTextRef.current) {
+        gsap.fromTo(descTextRef.current.children,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: descTextRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // Description section cards
+      if (descCardsRef.current) {
+        gsap.fromTo(descCardsRef.current.children,
+          { y: 50, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: descCardsRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // Portfolio cards
+      if (portfolioRef.current) {
+        gsap.fromTo(portfolioRef.current.children,
+          { y: 40, opacity: 0, scale: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.9,
+            stagger: 0.1,
+            delay: 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: portfolioRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
+      // CTA section
+      if (ctaRef.current) {
+        gsap.fromTo(ctaRef.current.children,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: ctaRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+              fastScrollEnd: true,
+              preventOverlaps: true
+            }
+          }
+        );
+      }
       // Parallax effects
       const parallaxElements = document.querySelectorAll('.parallax');
       parallaxElements.forEach(element => {
@@ -75,7 +204,6 @@ export default function UIUXPage() {
         });
       });
     });
-
     return () => ctx.revert();
   }, []);
 
@@ -88,8 +216,31 @@ export default function UIUXPage() {
     { number: 24, label: "Hours Saved", icon: <Clock className="w-6 h-6" /> }
   ];
 
+  const portfolioProjects = [
+    {
+      title: "E-Commerce Platform",
+      description: "Modern e-commerce solution with advanced features and seamless user experience.",
+      tech: ["React", "Node.js", "MongoDB"],
+      image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      title: "SaaS Dashboard",
+      description: "Comprehensive analytics dashboard with real-time data visualization.",
+      tech: ["Vue.js", "Python", "PostgreSQL"],
+      image: "https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      title: "Mobile Banking App",
+      description: "Secure and intuitive mobile banking application with modern UI.",
+      tech: ["React Native", "Firebase", "Node.js"],
+      image: "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=800"
+    }
+  ];
+
   return (
-    <main className="pt-20">
+    <>
+      <GsapScroll />
+      <main className="pt-20">
       {/* Hero Section */}
       <section className="section-container parallax-section hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
         {/* Enhanced background with particles */}
@@ -103,15 +254,15 @@ export default function UIUXPage() {
         
         {/* Floating particles effect */}
         <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {particles.map((particle, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 bg-[#7784e4] rounded-full opacity-60"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 3}s`
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animation: particle.animation,
+                animationDelay: `${particle.animationDelay}s`
               }}
             />
           ))}
@@ -187,7 +338,7 @@ export default function UIUXPage() {
       {/* Description Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div ref={descTextRef} className="text-center mb-16">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
               What We <span className="gradient-text">Do</span>
             </h2>
@@ -196,7 +347,7 @@ export default function UIUXPage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div ref={descCardsRef} className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
@@ -206,7 +357,6 @@ export default function UIUXPage() {
                   Every design decision we make is backed by user research and data. We believe that great design should be invisible - users should focus on their goals, not on how to use the interface.
                 </p>
               </div>
-
               <div className="space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
                   Accessibility & Performance
@@ -215,7 +365,6 @@ export default function UIUXPage() {
                   We ensure our designs are accessible to all users and optimized for performance. Fast loading times and inclusive design practices are at the core of our development process.
                 </p>
               </div>
-
               <div className="space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
                   Conversion-Focused Approach
@@ -225,7 +374,6 @@ export default function UIUXPage() {
                 </p>
               </div>
             </div>
-
             <div className="relative">
               <div className="bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl p-8 border border-[#7784e4]/20">
                 <div className="space-y-6">
@@ -238,7 +386,6 @@ export default function UIUXPage() {
                       <p className="text-[#b8c5ff]">In-depth analysis of user behavior and needs</p>
                     </div>
                   </div>
-                  
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
                       <Palette className="w-6 h-6 text-white" />
@@ -248,7 +395,6 @@ export default function UIUXPage() {
                       <p className="text-[#b8c5ff]">Beautiful, functional interfaces that convert</p>
                     </div>
                   </div>
-                  
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
                       <Code className="w-6 h-6 text-white" />
@@ -266,8 +412,10 @@ export default function UIUXPage() {
       </section>
 
       {/* Portfolio Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-[#0c0c7a]/20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 lg:py-32 bg-gradient-to-b from-transparent via-[#0c0c7a]/10 to-[#0c0c7a]/20 relative overflow-hidden">
+        {/* Background gradient for edge blending */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0c0c7a]/10 to-transparent pointer-events-none z-0"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
               Our <span className="gradient-text">Portfolio</span>
@@ -277,36 +425,54 @@ export default function UIUXPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { src: "https://unsplash.it/600/400?image=1001", title: "E-commerce Platform" },
-              { src: "https://unsplash.it/600/400?image=1002", title: "Mobile Banking" },
-              { src: "https://unsplash.it/600/400?image=1003", title: "SaaS Dashboard" },
-              { src: "https://unsplash.it/600/400?image=1004", title: "Travel Booking" },
-              { src: "https://unsplash.it/600/400?image=1005", title: "Healthcare Portal" },
-              { src: "https://unsplash.it/600/400?image=1006", title: "Educational Platform" },
-              { src: "https://unsplash.it/600/400?image=1007", title: "Analytics Dashboard" },
-              { src: "https://unsplash.it/600/400?image=1008", title: "Social Media App" },
-              { src: "https://unsplash.it/600/400?image=1009", title: "CRM System" },
-              { src: "https://unsplash.it/600/400?image=1010", title: "Restaurant App" },
-            ].map((item, i) => (
+          <div ref={portfolioRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {portfolioProjects.map((project, index) => (
               <div
-                key={i}
-                className="group bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl border border-[#7784e4]/20 hover:border-[#7784e4]/40 neon-border card-hover card-3d transition-all duration-500 hover:scale-105 cursor-pointer overflow-hidden"
+                key={index}
+                className="group bg-gradient-to-br from-[#040422] to-[#0c0c7a]/20 rounded-2xl neon-border overflow-hidden card-hover card-3d relative"
               >
-                <div className="relative h-56 w-full overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img
-                    src={item.src}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    draggable="false"
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="text-white text-xl font-bold drop-shadow-lg">{item.title}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#040422]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                    <div className="flex gap-4">
+                      <button className="p-2 bg-[#7784e4] rounded-full text-white hover:bg-[#1b1ac7] transition-colors duration-300">
+                        <ArrowRight size={16} />
+                      </button>
+                      <button className="p-2 bg-[#7784e4] rounded-full text-white hover:bg-[#1b1ac7] transition-colors duration-300">
+                        <Star size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#7784e4] transition-colors duration-300">
+                    {project.title}
+                  </h3>
+                  <p className="text-[#b8c5ff] mb-4 leading-relaxed">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 bg-[#7784e4]/20 text-[#7784e4] text-sm rounded-full border border-[#7784e4]/30"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="text-center mt-12">
+            <button className="btn-primary hover:scale-105">
+              View All Projects
+            </button>
           </div>
         </div>
       </section>
@@ -314,7 +480,7 @@ export default function UIUXPage() {
       {/* CTA Section */}
       <section className="py-20 lg:py-32 bg-gradient-to-r from-[#1b1ac7]/10 to-[#7784e4]/10">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div ref={ctaRef} className="max-w-4xl mx-auto space-y-8">
             <h2 className="text-4xl lg:text-6xl font-bold">
               Ready to Transform Your <span className="gradient-text">Digital Experience</span>?
             </h2>
@@ -335,5 +501,6 @@ export default function UIUXPage() {
         </div>
       </section>
     </main>
+    </>
   );
 }

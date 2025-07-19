@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import PlanetAnimation from './PlanetAnimation';
 import { ArrowDown, Sparkles, Play } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -111,10 +110,10 @@ const HeroSection = () => {
           }
         });
       }
-      // Animate planet with enhanced effects
-      const planetElement = document.querySelector('.planet-3d');
-      if (planetElement) {
-        gsap.fromTo(planetElement,
+      // Animate video with enhanced effects
+      const videoElement = document.querySelector('video');
+      if (videoElement) {
+        gsap.fromTo(videoElement,
           { 
             scale: 0.7,
             rotation: -20,
@@ -129,7 +128,7 @@ const HeroSection = () => {
             duration: 1.5,
             ease: "power3.out",
             scrollTrigger: {
-              trigger: planetElement,
+              trigger: videoElement,
               start: "top 80%",
               toggleActions: "play reverse play reverse",
               fastScrollEnd: true,
@@ -189,7 +188,7 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Right Content - Planet Animation */}
+        {/* Right Content - Planet Video */}
         <div className="flex justify-center lg:justify-end">
           <div className="relative">
             {/* Timer display like in reference */}
@@ -200,7 +199,23 @@ const HeroSection = () => {
                 <span className="text-[#7784e4] text-sm">Connected</span>
               </div>
             </div>
-            <PlanetAnimation size="large" />
+            <div className="relative w-96 h-96 rounded-full overflow-hidden">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover rounded-full"
+                style={{
+                  filter: 'brightness(1.2) contrast(1.1)',
+                  mixBlendMode: 'screen'
+                }}
+              >
+                <source src="/PlanetVideo.mp4" type="video/mp4" />
+              </video>
+              {/* Glow effect overlay */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#7784e4]/20 to-transparent pointer-events-none"></div>
+            </div>
           </div>
         </div>
       </div>

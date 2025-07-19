@@ -470,7 +470,7 @@ export default function UIUXPage() {
               Ready to Transform Your <span className="gradient-text">Digital Experience</span>?
             </h2>
             <p className="text-xl text-[#b8c5ff] leading-relaxed">
-              Let's collaborate to create user experiences that not only look stunning but drive real business results.
+              Let&apos;s collaborate to create user experiences that not only look stunning but drive real business results.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button className="group btn-primary flex items-center gap-3 hover:scale-105">

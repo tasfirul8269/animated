@@ -243,7 +243,7 @@ export default function SEOPage() {
                     </div>
                     <div>
                       <h4 className="text-xl font-bold text-white">On-Page Optimization</h4>
-                      <p className="text-[#b8c5ff]">Enhancing your site's content and structure for better rankings</p>
+                      <p className="text-[#b8c5ff]">Enhancing your site&apos;s content and structure for better rankings</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">

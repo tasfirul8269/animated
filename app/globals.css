@@ -26,22 +26,19 @@
 /* Optimize scroll performance */
 html {
   scroll-behavior: smooth;
-}
-
-/* Apply scroll snap only to main home page sections */
-.home-page {
-  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Reduce repaints during animations */
+/* Section container styling */
 .section-container {
   min-height: 100vh;
   position: relative;
-  scroll-snap-align: start;
   contain: layout style paint;
 }
 

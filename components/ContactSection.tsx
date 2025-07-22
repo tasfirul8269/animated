@@ -202,7 +202,7 @@ const ContactSection = () => {
               
               {submitSuccess && (
                 <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm text-center">
-                  Thank you! Your message has been sent. We'll get back to you soon.
+                  Thank you! Your message has been sent. We&apos;ll get back to you soon.
                 </div>
               )}
             </div>

@@ -1,20 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { Award, Users, Zap, Target } from 'lucide-react';
-import PlanetAnimation from './PlanetAnimation';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
-
-// Remove all gsap and ScrollTrigger imports and logic
 
 const AboutSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-
   const stats = [
     { number: "150+", label: "Projects Completed", icon: <Award className="w-6 h-6" /> },
     { number: "50+", label: "Happy Clients", icon: <Users className="w-6 h-6" /> },
@@ -22,100 +10,8 @@ const AboutSection = () => {
     { number: "99%", label: "Success Rate", icon: <Target className="w-6 h-6" /> }
   ];
 
-  useEffect(() => {
-    // GSAP entrance/exit animation for texts
-    const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.fromTo(titleRef.current,
-          { y: 40, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.0,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      if (contentRef.current) {
-        gsap.fromTo(contentRef.current.children,
-          { y: 30, opacity: 0, scale: 0.95, rotationY: 5 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationY: 0,
-            duration: 0.9,
-            stagger: 0.15,
-            delay: 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: contentRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Animate stats cards with enhanced effects
-      if (statsRef.current) {
-        gsap.fromTo(statsRef.current.children,
-          { 
-            y: 50,
-            opacity: 0,
-            scale: 0.8,
-            rotationY: 10,
-            z: -50
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationY: 0,
-            z: 0,
-            duration: 1.1,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: statsRef.current,
-              start: "top 85%",
-              toggleActions: "play reverse play reverse",
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Parallax effect for background elements
-      const bgElements = sectionRef.current?.querySelectorAll('.absolute');
-      if (bgElements) {
-        gsap.to(bgElements, {
-          y: -30,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
-          }
-        });
-      }
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="section-container parallax-section relative overflow-hidden">
+    <section className="section-container relative">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-64 h-64 border border-[#7784e4]/20 rounded-full"></div>
@@ -124,7 +20,7 @@ const AboutSection = () => {
 
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 ref={titleRef} className="text-4xl lg:text-6xl font-bold mb-6">
+          <h2 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in-up">
             About <span className="gradient-text">NEXUS</span>
           </h2>
           <p className="text-xl text-[#b8c5ff] max-w-3xl mx-auto opacity-90">
@@ -134,7 +30,7 @@ const AboutSection = () => {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
           {/* Content */}
-          <div ref={contentRef} className="space-y-6">
+          <div className="space-y-6 [&>*]:animate-fade-in-up [&>*]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300">
             <p className="text-lg lg:text-xl text-[#b8c5ff] leading-relaxed">
               We are a forward-thinking digital agency specializing in creating extraordinary web experiences. 
               Our team combines creativity with cutting-edge technology to deliver solutions that not only 
@@ -179,7 +75,7 @@ const AboutSection = () => {
         </div>
 
         {/* Stats */}
-        <div ref={statsRef} className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300 [&>*:nth-child(4)]:animate-delay-400">
           {stats.map((stat, index) => (
             <div
               key={index}

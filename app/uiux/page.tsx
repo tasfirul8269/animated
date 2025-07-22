@@ -1,211 +1,66 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import GsapScroll from '../../components/GsapScroll';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import { 
   Palette, Users, Lightbulb, Target, Zap, Award, Sparkles, 
   Eye, Code, Smartphone, Monitor, Layers, ArrowRight, 
   CheckCircle, Star, TrendingUp, Shield, Clock, Globe
 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function UIUXPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
+  // Set up particles with CSS animations
+  const [particles] = useState(
+    Array.from({ length: 20 }).map((_, i) => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+      animationDelay: Math.random() * 3,
+    }))
+  );
+
+  // Counter animation for stats
+  const [counters, setCounters] = useState([0, 0, 0, 0]);
+  const [countersActive, setCountersActive] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
-  const descTextRef = useRef<HTMLDivElement>(null);
-  const descCardsRef = useRef<HTMLDivElement>(null);
-  const portfolioRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
 
-  const [particles, setParticles] = useState<Array<{
-    left: number;
-    top: number;
-    animation: string;
-    animationDelay: number;
-  }>>([]);
-
+  // Set up intersection observer for counter animation
   useEffect(() => {
-    setParticles(
-      Array.from({ length: 20 }).map((_, i) => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
-        animationDelay: Math.random() * 3,
-      }))
-    );
-  }, []);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Hero animations
-      if (heroRef.current) {
-        gsap.fromTo(heroRef.current.children,
-          { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.2,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: heroRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !countersActive) {
+          setCountersActive(true);
+          const targetValues = [150, 98, 45, 24];
+          const duration = 2000; // 2 seconds
+          const steps = 60; // frames
+          const stepValues = targetValues.map(val => val / steps);
+          
+          let currentStep = 0;
+          const interval = setInterval(() => {
+            currentStep++;
+            setCounters(prev => prev.map((_, i) => 
+              Math.min(Math.ceil(stepValues[i] * currentStep), targetValues[i])
+            ));
+            
+            if (currentStep >= steps) {
+              clearInterval(interval);
             }
-          }
-        );
-      }
-      // Stats cards
-      if (statsRef.current) {
-        gsap.fromTo(statsRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: statsRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-        // Stat number counter
-        const statNumbers = statsRef.current.querySelectorAll('.stat-number');
-        statNumbers.forEach((number, index) => {
-          gsap.fromTo(number,
-            { textContent: 0 },
-            {
-              textContent: number.getAttribute('data-target'),
-              duration: 2,
-              delay: index * 0.2,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: number,
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-              },
-              onUpdate: function() {
-                number.textContent = String(Math.ceil(Number(this.targets()[0].textContent)));
-              }
-            }
-          );
-        });
-      }
-      // Description section text
-      if (descTextRef.current) {
-        gsap.fromTo(descTextRef.current.children,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.12,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: descTextRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Description section cards
-      if (descCardsRef.current) {
-        gsap.fromTo(descCardsRef.current.children,
-          { y: 50, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.1,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: descCardsRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Portfolio cards
-      if (portfolioRef.current) {
-        gsap.fromTo(portfolioRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            stagger: 0.1,
-            delay: 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: portfolioRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // CTA section
-      if (ctaRef.current) {
-        gsap.fromTo(ctaRef.current.children,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.12,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ctaRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Parallax effects
-      const parallaxElements = document.querySelectorAll('.parallax');
-      parallaxElements.forEach(element => {
-        gsap.to(element, {
-          y: -30,
-          ease: "none",
-          scrollTrigger: {
-            trigger: element,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
-          }
-        });
+          }, duration / steps);
+        }
       });
-    });
-    return () => ctx.revert();
-  }, []);
+    }, { threshold: 0.1 });
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, [countersActive]);
 
 
 
@@ -239,7 +94,6 @@ export default function UIUXPage() {
 
   return (
     <>
-      <GsapScroll />
       <main className="pt-20">
       {/* Hero Section */}
       <section className="section-container parallax-section hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -278,7 +132,7 @@ export default function UIUXPage() {
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#1b1ac7]/5 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div ref={heroRef} className="space-y-12 max-w-5xl mx-auto">
+          <div className="space-y-12 max-w-5xl mx-auto animate-fade-in-up [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300">
             <div className="space-y-8">
               <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
                 <div className="gradient-text">UI/UX</div>
@@ -319,14 +173,17 @@ export default function UIUXPage() {
               Delivering exceptional results through data-driven design
             </p>
           </div>
-          <div ref={statsRef} className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div 
+            ref={statsRef}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300 [&>*:nth-child(4)]:animate-delay-400"
+          >
             {stats.map((stat, index) => (
               <div key={index} className="text-center p-8 bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl neon-border card-hover card-3d border border-[#7784e4]/20 hover:border-[#7784e4]/40 transition-all duration-500 hover:scale-105">
                 <div className="text-[#7784e4] mb-6 flex justify-center">
                   {stat.icon}
                 </div>
-                <div className="stat-number text-4xl lg:text-5xl font-bold text-white mb-3" data-target={stat.number}>
-                  0
+                <div className="text-4xl lg:text-5xl font-bold text-white mb-3">
+                  {countersActive ? stat.number : 0}
                 </div>
                 <div className="text-[#b8c5ff] text-sm lg:text-base font-medium">{stat.label}</div>
               </div>
@@ -338,7 +195,7 @@ export default function UIUXPage() {
       {/* Description Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div ref={descTextRef} className="text-center mb-16">
+          <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
               What We <span className="gradient-text">Do</span>
             </h2>
@@ -347,7 +204,7 @@ export default function UIUXPage() {
             </p>
           </div>
 
-          <div ref={descCardsRef} className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-center [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
@@ -425,7 +282,7 @@ export default function UIUXPage() {
             </p>
           </div>
 
-          <div ref={portfolioRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-150 [&>*:nth-child(3)]:animate-delay-200">
             {portfolioProjects.map((project, index) => (
               <div
                 key={index}
@@ -465,7 +322,7 @@ export default function UIUXPage() {
       {/* CTA Section */}
       <section className="py-20 lg:py-32 bg-gradient-to-r from-[#1b1ac7]/10 to-[#7784e4]/10">
         <div className="container mx-auto px-4 text-center">
-          <div ref={ctaRef} className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
             <h2 className="text-4xl lg:text-6xl font-bold">
               Ready to Transform Your <span className="gradient-text">Digital Experience</span>?
             </h2>

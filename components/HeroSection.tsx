@@ -1,10 +1,31 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, Sparkles, Play } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
+import { Sparkles, Play } from 'lucide-react';
+
+// Add keyframes for particle animation
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-20px) translateX(10px); }
+    }
+    
+    .text-glow {
+      text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(167, 139, 250, 0.2);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -21,130 +42,95 @@ const HeroSection = () => {
   }>>([]);
 
   useEffect(() => {
-    // Generate particles on client side only
+    // Generate particles on client side
     const newParticles = Array.from({ length: 20 }, () => ({
-      width: Math.random() * 4 + 1,
-      height: Math.random() * 4 + 1,
+      width: Math.random() * 5 + 2,
+      height: Math.random() * 5 + 2,
       left: Math.random() * 100,
-      delay: Math.random() * 8,
-      duration: 8 + Math.random() * 4
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 10 + Math.random() * 10
     }));
     setParticles(newParticles);
 
-    // GSAP entrance/exit animation for texts
-    const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.fromTo(titleRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.0,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      if (subtitleRef.current) {
-        gsap.fromTo(subtitleRef.current,
-          { y: 30, opacity: 0, scale: 0.95, rotationY: 5 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationY: 0,
-            duration: 0.9,
-            delay: 0.3,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: subtitleRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      if (ctaRef.current) {
-        gsap.fromTo(ctaRef.current.children,
-          { y: 30, opacity: 0, scale: 0.9, rotationZ: 3 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationZ: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            delay: 0.5,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ctaRef.current,
-              start: 'top 90%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Parallax effect for background particles
+    // Add scroll event for parallax effect
+    const handleScroll = () => {
       if (backgroundRef.current) {
-        gsap.to(backgroundRef.current, {
-          y: -40,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
-          }
-        });
+        const scrollY = window.scrollY;
+        const yPos = -scrollY * 0.2;
+        backgroundRef.current.style.setProperty('--parallax-y', `${yPos}px`);
       }
-      // Animate video with enhanced effects
-      const videoElement = document.querySelector('video');
-      if (videoElement) {
-        gsap.fromTo(videoElement,
-          { 
-            scale: 0.7,
-            rotation: -20,
-            y: 50,
-            opacity: 0
-          },
-          {
-            scale: 1,
-            rotation: 0,
-            y: 0,
-            opacity: 1,
-            duration: 1.5,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: videoElement,
-              start: "top 80%",
-              toggleActions: "play reverse play reverse",
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-    }, heroRef);
-    return () => ctx.revert();
+    };
+
+    // Initial call
+    handleScroll();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
-    <section ref={heroRef} className="section-container parallax-section hero-bg">
+    <section ref={heroRef} className="section-container parallax-section relative overflow-hidden min-h-screen flex items-center" style={{ background: '#0a0613' }}>
+      {/* Mesh gradient blobs */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div
+          className="absolute"
+          style={{
+            top: '10%',
+            left: '5%',
+            width: '400px',
+            height: '400px',
+            background: 'radial-gradient(circle at 30% 30%, #a78bfa 0%, transparent 70%)',
+            opacity: 0.7,
+            filter: 'blur(80px)'
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            bottom: '0%',
+            right: '10%',
+            width: '350px',
+            height: '350px',
+            background: 'radial-gradient(circle at 70% 70%, #5f3dc4 0%, transparent 70%)',
+            opacity: 0.6,
+            filter: 'blur(80px)'
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            top: '40%',
+            left: '50%',
+            width: '300px',
+            height: '300px',
+            background: 'radial-gradient(circle at 50% 50%, #c5b7ec 0%, transparent 70%)',
+            opacity: 0.5,
+            filter: 'blur(100px)'
+          }}
+        />
+      </div>
+      
+      {/* Soft gradient overlay for depth */}
+      <div className="absolute inset-0 pointer-events-none"
+           style={{
+             background: 'linear-gradient(180deg, rgba(27,19,63,0.0) 60%, rgba(44,37,94,0.28) 100%)'
+           }} />
+           
       {/* Animated Background Particles */}
-      <div ref={backgroundRef} className="bg-particles">
+      <div ref={backgroundRef} className="bg-particles" style={{
+        '--parallax-y': '0px',
+        transform: 'translate3d(0, var(--parallax-y, 0), 0)',
+        willChange: 'transform',
+        backfaceVisibility: 'hidden',
+        transformStyle: 'preserve-3d',
+        transformOrigin: 'center center'
+      } as React.CSSProperties}>
         {particles.map((particle, i) => (
           <div
             key={i}
@@ -154,67 +140,87 @@ const HeroSection = () => {
               height: `${particle.height}px`,
               left: `${particle.left}%`,
               animationDelay: `${particle.delay}s`,
-              animationDuration: `${particle.duration}s`
+              animationDuration: `${particle.duration}s`,
+              animationName: 'float',
+              animationTimingFunction: 'ease-in-out',
+              animationIterationCount: 'infinite'
             }}
           />
         ))}
       </div>
 
-      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10 h-full">
+      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10 h-full py-20">
         {/* Left Content */}
         <div className="text-center lg:text-left space-y-8">
-          <h1 ref={titleRef} className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
-            <div className="gradient-text text-glow">Fast.</div>
-            <div className="text-white">Reliable.</div>
-            <div className="gradient-text text-glow">Safe.</div>
+          <h1 ref={titleRef} className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <div className="bg-gradient-to-r from-[#c5b7ec] to-[#a78bfa] bg-clip-text text-transparent text-glow">Fast.</div>
+            <div className="text-[#e5dbff]">Reliable.</div>
+            <div className="bg-gradient-to-r from-[#c5b7ec] to-[#a78bfa] bg-clip-text text-transparent text-glow">Safe.</div>
           </h1>
           
-          <p 
-            ref={subtitleRef}
-            className="text-xl lg:text-2xl text-[#b8c5ff] max-w-2xl leading-relaxed opacity-90"
-          >
+          <p ref={subtitleRef} className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0">
             The most advanced digital solutions with bulletproof security and lightning-fast performance that your business deserves.
           </p>
           
-          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-            <button className="group btn-primary flex items-center gap-3 hover:scale-105">
+          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-12">
+            <button className="group btn-primary flex items-center gap-3 hover:scale-105 bg-gradient-to-r from-[#a78bfa] to-[#c5b7ec] text-[#1b133f] px-8 py-4 rounded-full font-semibold transition-all duration-300">
               <Sparkles size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-              Install ArgusVPN
+              Get Started
             </button>
-            <button className="group border-2 border-[#7784e4] px-8 py-4 rounded-full text-[#7784e4] font-semibold hover:bg-[#7784e4] hover:text-white transition-all duration-500 flex items-center gap-3 hover:scale-105">
+            <button className="group border-2 border-[#a78bfa] px-8 py-4 rounded-full text-[#a78bfa] font-semibold hover:bg-[#a78bfa] hover:text-[#1b133f] transition-all duration-300 flex items-center gap-3 hover:scale-105">
               <Play size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-              30-day money back guarantee
+              Watch Demo
             </button>
+          </div>
+          
+          <div className="flex items-center justify-center lg:justify-start gap-4 mt-8 text-gray-400 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+              <span>99.9% Uptime</span>
+            </div>
+            <div className="h-4 w-px bg-gray-700"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+              <span>24/7 Support</span>
+            </div>
           </div>
         </div>
 
-        {/* Right Content - Planet Video */}
-        <div className="flex justify-center lg:justify-end">
+        {/* Right Content - Planet Animation */}
+        <div className="flex justify-center lg:justify-end mt-16 lg:mt-0">
           <div className="relative">
-            {/* Timer display like in reference */}
-            <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-[#040422]/80 backdrop-blur-md border border-[#7784e4]/30 rounded-2xl px-6 py-3 z-10">
+            {/* Feature cards */}
+            <div className="absolute -top-10 -left-10 bg-[#0f0a23] backdrop-blur-lg rounded-2xl p-4 shadow-lg border border-[#2a1f5c] z-10 w-48">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-white font-mono text-lg">00:00:05</span>
-                <span className="text-[#7784e4] text-sm">Connected</span>
+                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                <span className="text-white font-medium">Secure Connection</span>
               </div>
+              <p className="text-xs text-gray-400 mt-2">End-to-end encryption for maximum security</p>
             </div>
-            <div className="relative w-96 h-96 rounded-full overflow-hidden">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover rounded-full"
-                style={{
-                  filter: 'brightness(1.2) contrast(1.1)',
-                  mixBlendMode: 'screen'
-                }}
-              >
-                <source src="/PlanetVideo.mp4" type="video/mp4" />
-              </video>
-              {/* Glow effect overlay */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#7784e4]/20 to-transparent pointer-events-none"></div>
+            
+            <div className="absolute -bottom-10 -right-10 bg-[#0f0a23] backdrop-blur-lg rounded-2xl p-4 shadow-lg border border-[#2a1f5c] z-10 w-48">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                <span className="text-white font-medium">Fast Speeds</span>
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Lightning-fast servers worldwide</p>
+            </div>
+            
+            {/* Main planet animation */}
+            <div className="relative w-80 h-80 md:w-96 md:h-96">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#5f3dc4] opacity-20 blur-3xl"></div>
+              <div className="relative z-10 w-full h-full flex items-center justify-center">
+                <div className="w-3/4 h-3/4 rounded-full bg-gradient-to-br from-[#a78bfa] to-[#5f3dc4] opacity-30 animate-pulse"></div>
+                <div className="absolute w-full h-full rounded-full border border-[#a78bfa] border-opacity-20"></div>
+                <div className="absolute w-3/4 h-3/4 rounded-full border border-[#a78bfa] border-opacity-20"></div>
+                <div className="absolute w-1/2 h-1/2 rounded-full border border-[#a78bfa] border-opacity-20"></div>
+                
+                {/* Glow effect */}
+                <div className="absolute w-1/2 h-1/2 rounded-full bg-[#a78bfa] opacity-10 blur-xl"></div>
+                
+                {/* Center dot */}
+                <div className="absolute w-4 h-4 rounded-full bg-white"></div>
+              </div>
             </div>
           </div>
         </div>

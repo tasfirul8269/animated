@@ -1,13 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import PlanetAnimation from './PlanetAnimation';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
-
-// Remove all gsap and ScrollTrigger imports and logic
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -15,146 +10,106 @@ const ContactSection = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const contactInfoRef = useRef<HTMLDivElement>(null);
 
+  const [isVisible, setIsVisible] = useState(true);
+  const [formVisible, setFormVisible] = useState(true);
+  const [contactVisible, setContactVisible] = useState(true);
+  const [cardsVisible, setCardsVisible] = useState(true);
+  const [bgOffset, setBgOffset] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    // GSAP entrance/exit animation for texts
-    const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.fromTo(titleRef.current,
-          { y: 40, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.0,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      if (contactInfoRef.current) {
-        gsap.fromTo(contactInfoRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            stagger: 0.15,
-            delay: 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: contactInfoRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Enhanced contact info card animations
-      if (contactInfoRef.current) {
-        const contactCards = Array.from(contactInfoRef.current.children);
-        contactCards.forEach((card, index) => {
-          gsap.fromTo(card,
-            { 
-              y: 60,
-              opacity: 0,
-              scale: 0.8,
-              rotationX: 12,
-              z: -80
-            },
-            {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              rotationX: 0,
-              z: 0,
-              duration: 1.2,
-              delay: index * 0.15,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: card,
-                start: "top 90%",
-                toggleActions: "play reverse play reverse",
-                fastScrollEnd: true,
-                preventOverlaps: true
-              }
-            }
-          );
-        });
-      }
-      // Animate form elements
-      if (formRef.current) {
-        const formElements = formRef.current.querySelectorAll('input, textarea, button');
-        gsap.fromTo(formElements,
-          { 
-            y: 25,
-            opacity: 0,
-            scale: 0.95,
-            rotationZ: 3
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationZ: 0,
-            duration: 0.8,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: formRef.current,
-              start: "top 85%",
-              toggleActions: "play reverse play reverse",
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Parallax effect for background gradient
-      const bgGradient = document.querySelector('.bg-gradient-to-t');
-      if (bgGradient) {
-        gsap.to(bgGradient, {
-          y: -25,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
+    // Only run on client-side
+    if (typeof window === 'undefined') return;
+    
+    // Set mounted state to trigger initial animations
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 100);
+
+    // Set up Intersection Observer for title
+    const titleObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Trigger form and contact animations after a delay
+            setTimeout(() => setFormVisible(true), 100);
+            setTimeout(() => setContactVisible(true), 200);
+            setTimeout(() => setCardsVisible(true), 300);
           }
         });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (titleRef.current) {
+      titleObserver.observe(titleRef.current);
+    }
+
+    // Parallax effect for background gradient
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const scrollY = window.scrollY;
+        const sectionTop = sectionRef.current.offsetTop;
+        const sectionHeight = sectionRef.current.offsetHeight;
+        const scrollPosition = scrollY - sectionTop;
+        
+        if (scrollPosition > -sectionHeight && scrollPosition < sectionHeight * 2) {
+          const offset = Math.min(Math.max((scrollY - sectionTop) * 0.1, -25), 0);
+          setBgOffset(offset);
+        }
       }
-    }, sectionRef);
-    return () => ctx.revert();
+    };
+
+    // Initial check
+    handleScroll();
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Cleanup
+    return () => {
+      clearTimeout(timer);
+      if (titleObserver) titleObserver.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
-    <section ref={sectionRef} className="section-container parallax-section relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c7a]/10 to-transparent"></div>
+    <section ref={sectionRef} className="section-container relative overflow-hidden">
+      {/* Background gradient with parallax */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-t from-[#0c0c7a]/10 to-transparent transition-transform duration-300 will-change-transform"
+        style={{ transform: `translate3d(0, ${bgOffset}px, 0)` }}
+      ></div>
 
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 ref={titleRef} className="text-4xl lg:text-6xl font-bold mb-6">
+          <h2 
+            ref={titleRef} 
+            className={`text-4xl lg:text-6xl font-bold mb-6 transition-all duration-700 ease-out transform ${
+              isMounted ? 'opacity-100 translate-y-0 scale-100 rotate-x-0' : 'opacity-0 translate-y-10 scale-95 rotate-x-8'
+            }`}
+          >
             Get In <span className="gradient-text">Touch</span>
           </h2>
-          <p className="text-xl text-[#b8c5ff] max-w-3xl mx-auto opacity-90">
+          <p 
+            className={`text-xl text-[#b8c5ff] max-w-3xl mx-auto transition-all duration-700 ease-out delay-100 ${
+              isMounted ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-5'
+            }`}
+          >
             Ready to start your next project? Let&apos;s discuss how we can help bring your vision to life.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Contact Form */}
-          <form ref={formRef} className="space-y-6">
+          <form 
+            ref={formRef} 
+            className={`space-y-6 transition-all duration-700 ease-out delay-200 ${
+              isMounted ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-[#b8c5ff] mb-2 font-medium">Name</label>
@@ -194,7 +149,9 @@ const ContactSection = () => {
             
             <button
               type="submit"
-              className="group w-full btn-primary flex items-center justify-center gap-3 hover:scale-105"
+              className={`group w-full btn-primary flex items-center justify-center gap-3 transition-all duration-300 ${
+                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+              }`}
             >
               <Send size={20} className="group-hover:translate-x-1 transition-transform duration-300" />
               Send Message
@@ -202,7 +159,12 @@ const ContactSection = () => {
           </form>
 
           {/* Contact Information */}
-          <div ref={contactInfoRef} className="space-y-8">
+          <div 
+            ref={contactInfoRef} 
+            className={`space-y-8 transition-all duration-700 ease-out delay-300 ${
+              isMounted ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
             <div className="bg-gradient-to-br from-[#040422] to-[#0c0c7a]/20 p-8 rounded-2xl neon-border">
               <h3 className="text-2xl font-bold text-white mb-6">Contact Information</h3>
               

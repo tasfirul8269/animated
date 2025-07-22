@@ -1,192 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useState } from 'react';
 import { Code, Smartphone, Zap, Shield, Globe, Database, Sparkles, Play } from 'lucide-react';
 import PlanetAnimation from '../../components/PlanetAnimation';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function WebDevelopmentPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const descTextRef = useRef<HTMLDivElement>(null);
-  const descCardsRef = useRef<HTMLDivElement>(null);
-  const portfolioRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const techRef = useRef<HTMLDivElement>(null);
-  const processRef = useRef<HTMLDivElement>(null);
-  const [particles, setParticles] = useState<Array<{
-    left: number;
-    top: number;
-    animation: string;
-    animationDelay: number;
-  }>>([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 20 }).map((_, i) => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
-        animationDelay: Math.random() * 3,
-      }))
-    );
-  }, []);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Hero animation (UI/UX style)
-      if (heroRef.current) {
-        gsap.fromTo(heroRef.current.children,
-          { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.2,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: heroRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // About/Description section text
-      if (descTextRef.current) {
-        gsap.fromTo(descTextRef.current.children,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.12,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: descTextRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // About/Description section cards
-      if (descCardsRef.current) {
-        gsap.fromTo(descCardsRef.current.children,
-          { y: 50, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.1,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: descCardsRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Portfolio cards
-      if (portfolioRef.current) {
-        gsap.fromTo(portfolioRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            stagger: 0.1,
-            delay: 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: portfolioRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Features section
-      if (featuresRef.current) {
-        gsap.fromTo(featuresRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: featuresRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Tech stack section
-      if (techRef.current) {
-        gsap.fromTo(techRef.current.children,
-          { y: 60, opacity: 0, scale: 0.8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "back.out(1.7)",
-            scrollTrigger: {
-              trigger: techRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-      }
-      // Process section
-      if (processRef.current) {
-        gsap.fromTo(processRef.current.children,
-          { y: 40, opacity: 0, scale: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: processRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-    });
-
-    return () => ctx.revert();
-  }, []);
+  // Set up particles with CSS animations
+  const [particles] = useState(
+    Array.from({ length: 20 }).map((_, i) => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+      animationDelay: Math.random() * 3,
+    }))
+  );
 
   // Portfolio projects (example)
   const portfolioProjects = [
@@ -272,7 +99,7 @@ export default function WebDevelopmentPage() {
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#7784e4]/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#1b1ac7]/5 rounded-full blur-3xl"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div ref={heroRef} className="space-y-12 max-w-5xl mx-auto">
+          <div className="space-y-12 max-w-5xl mx-auto animate-fade-in-up">
             <div className="space-y-8">
               <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
                 <div className="gradient-text">Web</div>
@@ -283,7 +110,7 @@ export default function WebDevelopmentPage() {
               </p>
             </div>
             {/* Enhanced feature badges */}
-            <div className="flex flex-wrap justify-center gap-6 mt-12">
+            <div className="flex flex-wrap justify-center gap-4 [&>*]:animate-fade-in-up" style={{ '--stagger': '0.05s' } as React.CSSProperties}>
               <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#1b1ac7]/20 to-[#7784e4]/20 rounded-full border border-[#7784e4]/30 backdrop-blur-sm">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-[#b8c5ff] font-medium">Modern Stack</span>
@@ -304,7 +131,7 @@ export default function WebDevelopmentPage() {
       {/* About/Description Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div ref={descTextRef} className="text-center mb-16">
+          <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
               Why <span className="gradient-text">Web Development</span> Matters
             </h2>
@@ -312,61 +139,64 @@ export default function WebDevelopmentPage() {
               We build digital products that are fast, scalable, and secure. Our approach combines modern technology, robust architecture, and a focus on user experience to deliver real business value.
             </p>
           </div>
-          <div ref={descCardsRef} className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <h3 className="text-2xl lg:text-3xl font-bold text-white">
-                  Modern Technologies
-                </h3>
-                <p className="text-lg text-[#b8c5ff] leading-relaxed">
-                  We use the latest frameworks and tools to ensure your application is future-proof and maintainable.
-                </p>
-              </div>
-              <div className="space-y-6">
-                <h3 className="text-2xl lg:text-3xl font-bold text-white">
-                  User Experience
-                </h3>
-                <p className="text-lg text-[#b8c5ff] leading-relaxed">
-                  Our designs are intuitive and conversion-focused, ensuring your users love every interaction.
-                </p>
-              </div>
-              <div className="space-y-6">
-                <h3 className="text-2xl lg:text-3xl font-bold text-white">
-                  Security & Performance
-                </h3>
-                <p className="text-lg text-[#b8c5ff] leading-relaxed">
-                  We prioritize security and speed, so your business and users are always protected and satisfied.
-                </p>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl p-8 border border-[#7784e4]/20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left side with staggered animations */}
+            <div className="space-y-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300">
+              <div className="space-y-8">
                 <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
-                      <Code className="w-6 h-6 text-white" />
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                    Modern Technologies
+                  </h3>
+                  <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                    We use the latest frameworks and tools to ensure your application is future-proof and maintainable.
+                  </p>
+                </div>
+                <div className="space-y-6">
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                    User Experience
+                  </h3>
+                  <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                    Our designs are intuitive and conversion-focused, ensuring your users love every interaction.
+                  </p>
+                </div>
+                <div className="space-y-6">
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                    Security & Performance
+                  </h3>
+                  <p className="text-lg text-[#b8c5ff] leading-relaxed">
+                    We prioritize security and speed, so your business and users are always protected and satisfied.
+                  </p>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-br from-[#040422]/80 to-[#0c0c7a]/40 rounded-2xl p-8 border border-[#7784e4]/20">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                        <Code className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold text-white">Custom Development</h4>
+                        <p className="text-[#b8c5ff]">Tailored solutions for your unique business needs</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-xl font-bold text-white">Custom Development</h4>
-                      <p className="text-[#b8c5ff]">Tailored solutions for your unique business needs</p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                        <Smartphone className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold text-white">Mobile Ready</h4>
+                        <p className="text-[#b8c5ff]">Responsive design for all devices and platforms</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
-                      <Smartphone className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-bold text-white">Mobile Ready</h4>
-                      <p className="text-[#b8c5ff]">Responsive design for all devices and platforms</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-bold text-white">Secure by Design</h4>
-                      <p className="text-[#b8c5ff]">Best practices for robust, secure applications</p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-[#1b1ac7] to-[#7784e4] rounded-full flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold text-white">Secure by Design</h4>
+                        <p className="text-[#b8c5ff]">Best practices for robust, secure applications</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -389,7 +219,7 @@ export default function WebDevelopmentPage() {
               Showcasing our best work in web development and digital solutions
             </p>
           </div>
-          <div ref={portfolioRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-150 [&>*:nth-child(3)]:animate-delay-200">
             {portfolioProjects.map((project, index) => (
               <div
                 key={index}
@@ -429,7 +259,7 @@ export default function WebDevelopmentPage() {
               Why Choose Our <span className="gradient-text">Development</span> Services?
             </h2>
           </div>
-          <div ref={featuresRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-150 [&>*:nth-child(3)]:animate-delay-200 [&>*:nth-child(4)]:animate-delay-250">
             {features.map((feature, index) => (
               <div
                 key={index}
@@ -457,7 +287,7 @@ export default function WebDevelopmentPage() {
               We use the latest and most reliable technologies to build your applications
             </p>
           </div>
-          <div ref={techRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-150 [&>*:nth-child(3)]:animate-delay-200 [&>*:nth-child(4)]:animate-delay-250">
             {technologies.map((tech, index) => (
               <div
                 key={index}
@@ -478,7 +308,7 @@ export default function WebDevelopmentPage() {
               Development <span className="gradient-text">Process</span>
             </h2>
           </div>
-          <div ref={processRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-150 [&>*:nth-child(3)]:animate-delay-200 [&>*:nth-child(4)]:animate-delay-250">
             {[
               { step: "01", title: "Planning", description: "Requirements analysis and project planning" },
               { step: "02", title: "Design", description: "UI/UX design and architecture planning" },

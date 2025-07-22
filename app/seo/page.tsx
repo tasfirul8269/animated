@@ -1,101 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useState } from 'react';
 import { Search, TrendingUp, Target, BarChart3, Globe, Zap, Sparkles, Play } from 'lucide-react';
 import PlanetAnimation from '../../components/PlanetAnimation';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function SEOPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const descTextRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useRef<HTMLDivElement>(null);
-  const [particles, setParticles] = useState<Array<{
-    left: number;
-    top: number;
-    animation: string;
-    animationDelay: number;
-  }>>([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 20 }).map((_, i) => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
-        animationDelay: Math.random() * 3,
-      }))
-    );
-  }, []);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Hero animation (like UI/UX)
-      if (heroRef.current) {
-        gsap.fromTo(heroRef.current.children,
-          { y: 60, opacity: 0, scale: 0.9, rotationX: 8 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.2,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: heroRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // About/Description section text
-      if (descTextRef.current) {
-        gsap.fromTo(descTextRef.current.children,
-          { y: 40, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.0,
-            stagger: 0.12,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: descTextRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-              fastScrollEnd: true,
-              preventOverlaps: true
-            }
-          }
-        );
-      }
-      // Services animation
-      gsap.fromTo(servicesRef.current?.children || [],
-        { y: 100, opacity: 0, scale: 0.8 },
-        {
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: servicesRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, []);
+  // Set up particles with CSS animations
+  const [particles] = useState(
+    Array.from({ length: 20 }).map((_, i) => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animation: `${i % 3 === 0 ? 'float' : i % 3 === 1 ? 'floatReverse' : 'floatSlow'} ${3 + Math.random() * 4}s ease-in-out infinite`,
+      animationDelay: Math.random() * 3,
+    }))
+  );
 
   const seoServices = [
     {
@@ -158,7 +76,7 @@ export default function SEOPage() {
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#7784e4]/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#1b1ac7]/5 rounded-full blur-3xl"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div ref={heroRef} className="space-y-12 max-w-5xl mx-auto">
+          <div className="space-y-12 max-w-5xl mx-auto animate-fade-in-up [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200 [&>*:nth-child(3)]:animate-delay-300">
             <div className="space-y-8">
               <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-tight">
                 <div className="gradient-text">SEO</div>
@@ -190,7 +108,7 @@ export default function SEOPage() {
       {/* About/Description Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div ref={descTextRef} className="text-center mb-16">
+          <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
               Why <span className="gradient-text">SEO</span> Matters
             </h2>
@@ -198,7 +116,7 @@ export default function SEOPage() {
               SEO is the backbone of digital visibility. Our approach combines technical expertise, content strategy, and analytics to help your business rank higher, attract more visitors, and convert them into loyal customers.
             </p>
           </div>
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-center [&>*]:animate-fade-in-up [&>*:nth-child(1)]:animate-delay-100 [&>*:nth-child(2)]:animate-delay-200">
             <div className="space-y-8">
               <div className="space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
@@ -274,7 +192,7 @@ export default function SEOPage() {
             </p>
           </div>
 
-          <div ref={servicesRef} className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 [&>*]:animate-fade-in-up [&>*:nth-child(odd)]:animate-delay-100 [&>*:nth-child(even)]:animate-delay-200">
             {seoServices.map((service, index) => (
               <div
                 key={index}

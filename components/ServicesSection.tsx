@@ -1,11 +1,34 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Palette, Search, Code, Smartphone, Globe, Zap } from 'lucide-react';
 import PlanetAnimation from './PlanetAnimation';
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   const services = [
     {
@@ -59,7 +82,7 @@ const ServicesSection = () => {
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl lg:text-6xl font-bold mb-6">
             Our <span className="gradient-text">Services</span>
           </h2>
@@ -68,12 +91,24 @@ const ServicesSection = () => {
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {services.map((service, index) => {
+            const delay = Math.min(index * 100, 500); // Cap delay at 500ms
+            return (
             <div
               key={index}
-              className="bg-[#1a1a2e]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a2a45] hover:border-[#3a3a5a] transition-all duration-300 hover:shadow-2xl hover:shadow-[#3a3a5a]/20 hover:-translate-y-1"
+              className={`bg-[#1a1a2e]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a2a45] hover:border-[#3a3a5a] transition-all duration-500 hover:shadow-2xl hover:shadow-[#3a3a5a]/20 hover:-translate-y-1 transform transition-transform duration-300 ${
+                isVisible 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-8'
+              }`}
+              style={{
+                transitionDelay: isVisible ? `${delay}ms` : '0ms',
+                transitionProperty: 'opacity, transform',
+                transitionDuration: '700ms',
+                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
             >
-              <div className="text-[#7784e4] mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-[#7784e4] mb-6 group-hover:scale-110 transition-all duration-300 hover:rotate-6">
                 {service.icon}
               </div>
               <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-[#7784e4] transition-colors duration-300">
@@ -90,12 +125,20 @@ const ServicesSection = () => {
                   </li>
                 ))}
               </ul>
-              <button className="mt-2 text-[#7784e4] font-semibold hover:text-white transition-colors duration-300 flex items-center gap-2">
+              <button 
+                className="mt-2 text-[#7784e4] font-semibold hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+                onMouseEnter={(e) => {
+                  e.currentTarget.querySelector('.arrow')?.classList.add('translate-x-1');
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.querySelector('.arrow')?.classList.remove('translate-x-1');
+                }}
+              >
                 Learn More
-                <div className="w-4 h-4 border-t-2 border-r-2 border-[#7784e4] transform rotate-45 group-hover:translate-x-1 transition-transform duration-300"></div>
+                <div className="w-4 h-4 border-t-2 border-r-2 border-[#7784e4] transform rotate-45 transition-transform duration-300 arrow"></div>
               </button>
             </div>
-          ))}
+          );})}
         </div>
       </div>
     </section>

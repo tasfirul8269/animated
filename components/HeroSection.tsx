@@ -3,13 +3,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { Sparkles, Play } from 'lucide-react';
 
-// Add keyframes for particle animation
+// Add keyframes for animations
 if (typeof document !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = `
     @keyframes float {
       0%, 100% { transform: translateY(0) translateX(0); }
       50% { transform: translateY(-20px) translateX(10px); }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     .text-glow {
@@ -23,6 +34,16 @@ if (typeof document !== 'undefined') {
       pointer-events: none;
       animation: float 6s ease-in-out infinite;
     }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
   `;
   document.head.appendChild(style);
 }
@@ -68,9 +89,29 @@ const HeroSection = () => {
     // Add scroll event listener
     window.addEventListener('scroll', handleScroll, { passive: true });
 
+    // Animate elements when they come into view
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.animate-on-scroll');
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (elementTop < windowHeight - 100) {
+          element.classList.add('animate-fade-in-up');
+        }
+      });
+    };
+
+    // Initial check
+    animateOnScroll();
+    
+    // Add scroll event for animations
+    window.addEventListener('scroll', animateOnScroll);
+
     // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', animateOnScroll);
     };
   }, []);
 
@@ -152,29 +193,30 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10 h-full py-20">
         {/* Left Content */}
         <div className="text-center lg:text-left space-y-8">
-          <h1 ref={titleRef} className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            <div className="bg-gradient-to-r from-[#c5b7ec] to-[#a78bfa] bg-clip-text text-transparent text-glow">Fast.</div>
-            <div className="text-[#e5dbff]">Reliable.</div>
-            <div className="bg-gradient-to-r from-[#c5b7ec] to-[#a78bfa] bg-clip-text text-transparent text-glow">Safe.</div>
-          </h1>
-          
-          <p ref={subtitleRef} className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0">
-            The most advanced digital solutions with bulletproof security and lightning-fast performance that your business deserves.
-          </p>
-          
-          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-12">
-            <button className="group btn-primary flex items-center gap-3 hover:scale-105 bg-gradient-to-r from-[#a78bfa] to-[#c5b7ec] text-[#1b133f] px-8 py-4 rounded-full font-semibold transition-all duration-300">
-              <Sparkles size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-              Get Started
-            </button>
-            <button className="group border-2 border-[#a78bfa] px-8 py-4 rounded-full text-[#a78bfa] font-semibold hover:bg-[#a78bfa] hover:text-[#1b133f] transition-all duration-300 flex items-center gap-3 hover:scale-105">
-              <Play size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-              Watch Demo
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-center lg:justify-start gap-4 mt-8 text-gray-400 text-sm">
-            <div className="flex items-center gap-2">
+          <div className="max-w-4xl mx-auto lg:mx-0 text-center lg:text-left">
+            <h1 ref={titleRef} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+              <div className="gradient-text animate-on-scroll delay-100" style={{ opacity: 0, animationFillMode: 'forwards' }}>Fast.</div>
+              <div className="text-[#e5dbff] animate-on-scroll delay-150" style={{ opacity: 0, animationFillMode: 'forwards' }}>Reliable.</div>
+              <div className="gradient-text animate-on-scroll delay-200" style={{ opacity: 0, animationFillMode: 'forwards' }}>Secure.</div>
+            </h1>
+            
+            <p ref={subtitleRef} className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 animate-on-scroll delay-300" style={{ opacity: 0, animationFillMode: 'forwards' }}>
+              The most advanced digital solutions with bulletproof security and lightning-fast performance that your business deserves.
+            </p>
+            
+            <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-on-scroll delay-400" style={{ opacity: 0, animationFillMode: 'forwards' }}>
+              <button className="btn-primary group flex items-center gap-3 px-8 py-4 rounded-full text-lg font-semibold hover:scale-105 transition-transform bg-gradient-to-r from-[#a78bfa] to-[#c5b7ec] text-[#1b133f]">
+                <Sparkles size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+                Get Started
+              </button>
+              <button className="group border-2 border-[#a78bfa] px-8 py-4 rounded-full text-[#a78bfa] font-semibold hover:bg-[#a78bfa] hover:text-[#1b133f] transition-all duration-300 flex items-center gap-3 hover:scale-105">
+                <Play size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+                Watch Demo
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center lg:justify-start gap-4 mt-8 text-gray-400 text-sm">
+              <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
               <span>99.9% Uptime</span>
             </div>
@@ -185,6 +227,7 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
+      </div>
 
         {/* Right Content - Planet Animation */}
         <div className="flex justify-center lg:justify-end mt-16 lg:mt-0">

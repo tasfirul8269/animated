@@ -1,7 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navigation from '../components/Navigation';
 import ScrollProgress from '../components/ScrollProgress';
 import Footer from '../components/Footer';
 
@@ -21,7 +20,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ScrollProgress />
-        <Navigation />
         {children}
         <Footer />
       </body>

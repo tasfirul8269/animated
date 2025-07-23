@@ -33,6 +33,7 @@ export default function ScrollAnimation({
   const controls = useAnimation();
   const ref = useRef<HTMLDivElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
   // Define default animation variants based on direction
   const getDefaultVariants = (): Variants => {
@@ -90,6 +91,11 @@ export default function ScrollAnimation({
   const animationVariants = variants || getDefaultVariants();
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     // Use requestIdleCallback where available for performance
     const requestIdleCallbackPolyfill = 
       typeof window !== 'undefined' ? 
@@ -97,21 +103,22 @@ export default function ScrollAnimation({
       ((cb) => setTimeout(cb, 1)) : 
       (cb: any) => cb();
 
+    let isMounted = true;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
 
         if (entry.isIntersecting) {
-          // Use requestIdleCallback to not block the main thread
           requestIdleCallbackPolyfill(() => {
+            if (!isMounted) return;
             controls.start("visible");
             if (once) setHasAnimated(true);
           });
         } else {
-          // Always trigger exit animation when element leaves viewport
-          // unless it's a 'once' animation that has already played
           if (!once || !hasAnimated) {
             requestIdleCallbackPolyfill(() => {
+              if (!isMounted) return;
               controls.start("hidden");
             });
           }
@@ -119,8 +126,6 @@ export default function ScrollAnimation({
       },
       {
         threshold,
-        // Adjusted rootMargin to trigger animations when element is partially in viewport
-        // Negative bottom margin means it will trigger before fully in viewport
         rootMargin: "0px 0px -80px 0px"
       }
     );
@@ -131,11 +136,12 @@ export default function ScrollAnimation({
     }
 
     return () => {
+      isMounted = false;
       if (currentRef) {
         observer.unobserve(currentRef);
       }
     };
-  }, [controls, threshold, once, hasAnimated]);
+  }, [controls, threshold, once, hasAnimated, mounted]);
 
   return (
     <motion.div
@@ -144,7 +150,7 @@ export default function ScrollAnimation({
       animate={controls}
       variants={animationVariants}
       className={className}
-      style={{ willChange: 'opacity, transform' }} // Performance optimization
+      style={{ willChange: 'opacity, transform' }}
     >
       {children}
     </motion.div>

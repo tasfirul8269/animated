@@ -60,24 +60,24 @@ const ServicesSection = () => {
   const services = [
     {
       icon: <Video className="w-8 h-8" />,
-      title: "Motion Graphics & Animation",
-      description: "Bringing your ideas to life with stunning motion graphics and captivating animations.",
-      features: ["2D/3D Animation", "Motion Graphics", "Visual Effects", "Character Animation"],
-      path: "/motion-graphics"
+      title: "Video Editing",
+      description: "Professional video editing services including motion graphics, animations, vlogs, and more.",
+      features: ["Motion Graphics", "Animation", "Vlog Editing", "Promo Videos"],
+      path: "/services/video-editing"
     },
     {
       icon: <Image className="w-8 h-8" />,
       title: "Graphics Design",
       description: "Creating visually compelling designs that communicate your brand's message effectively.",
       features: ["Logo Design", "Branding", "Print Design", "Digital Graphics"],
-      path: "/graphics-design"
+      path: "/services/graphics-design"
     },
     {
       icon: <Box className="w-8 h-8 transform rotate-12 -rotate-y-12" />,
       title: "3D Animation",
       description: "Crafting immersive 3D experiences with realistic modeling and animation.",
       features: ["3D Modeling", "Texturing", "Rendering", "Character Rigging"],
-      path: "/3d-animation"
+      path: "/services/3d-animation"
     }
   ];
 
@@ -165,7 +165,7 @@ const ServicesSection = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <StaggerItem key={index} index={index}>
-                <div className="bg-[#1a1a2e]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a2a45] hover:border-[#3a3a5a] transition-all duration-500 hover:shadow-2xl hover:shadow-[#3a3a5a]/20 hover:-translate-y-1 transform transition-transform duration-300">
+                <div className="flex flex-col h-full bg-[#1a1a2e]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a2a45] hover:border-[#3a3a5a] transition-all duration-500 hover:shadow-2xl hover:shadow-[#3a3a5a]/20 hover:-translate-y-1 transform transition-transform duration-300">
                   <div className="text-[#7784e4] mb-6 group-hover:scale-110 transition-all duration-300 hover:rotate-6">
                     {service.icon}
                   </div>
@@ -175,7 +175,7 @@ const ServicesSection = () => {
                   <p className="text-[#b8c5ff] mb-6 leading-relaxed text-center">
                     {service.description}
                   </p>
-                  <ul className="space-y-2 mb-4">
+                  <ul className="space-y-2 mb-4 flex-1">
                     {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center text-sm text-[#b8c5ff]">
                         <div className="w-1.5 h-1.5 bg-[#7784e4] rounded-full mr-3"></div>

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import PlanetAnimation from './PlanetAnimation';
+import ScrollAnimation from './ScrollAnimation';
+import StaggerItem from './StaggerItem';
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -84,46 +86,22 @@ const ContactSection = () => {
       </div>
 
       <div className="container mx-auto px-4 py-20 relative">
-        <div className="text-center mb-16">
-          <h2 
-            ref={titleRef} 
-            className={`text-4xl lg:text-6xl font-bold mb-6 transition-all duration-700 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            Get In <span className="gradient-text">Touch</span>
-          </h2>
-          <p 
-            className={`text-xl text-[#b8c5ff] max-w-3xl mx-auto transition-all duration-700 ease-out ${
-              isVisible ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-            style={{
-              transitionDelay: isVisible ? '100ms' : '0ms',
-              transitionProperty: 'opacity, transform',
-              transitionDuration: '700ms',
-              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            Ready to start your next project? Let&apos;s discuss how we can help bring your vision to life.
-          </p>
-        </div>
+        <ScrollAnimation duration={0.7} delay={0.1} direction="up" once={false}>
+          <div className="text-center mb-16">
+            <h2 ref={titleRef} className="text-4xl lg:text-6xl font-bold mb-6">
+              Get In <span className="gradient-text">Touch</span>
+            </h2>
+            <p className="text-xl text-[#b8c5ff] max-w-3xl mx-auto opacity-90">
+              Ready to start your next project? Let&apos;s discuss how we can help bring your vision to life.
+            </p>
+          </div>
+        </ScrollAnimation>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Contact Form */}
-          <form 
-            ref={formRef} 
-            onSubmit={handleSubmit}
-            className={`space-y-6 transition-all duration-700 ease-out ${
-              formVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-            style={{
-              transitionDelay: formVisible ? '200ms' : '0ms',
-              transitionProperty: 'opacity, transform',
-              transitionDuration: '700ms',
-              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            <div className="grid md:grid-cols-2 gap-6">
+          <ScrollAnimation duration={0.7} delay={0.2} direction="up" once={false}>
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
               <div className="group">
                 <label className="block text-[#b8c5ff] mb-2 font-medium">Name</label>
                 <input
@@ -207,21 +185,12 @@ const ContactSection = () => {
               )}
             </div>
           </form>
+          </ScrollAnimation>
 
           {/* Contact Information */}
-          <div 
-            ref={contactInfoRef} 
-            className={`space-y-8 transition-all duration-700 ease-out ${
-              contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-            style={{
-              transitionDelay: contactVisible ? '300ms' : '0ms',
-              transitionProperty: 'opacity, transform',
-              transitionDuration: '700ms',
-              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            <div className="relative bg-gradient-to-br from-[#040422] to-[#0c0c7a]/20 p-8 rounded-2xl border border-[#7784e4]/20 backdrop-blur-sm overflow-hidden">
+          <ScrollAnimation duration={0.7} delay={0.3} direction="right" once={false}>
+            <div ref={contactInfoRef} className="space-y-8">
+              <div className="relative bg-gradient-to-br from-[#040422] to-[#0c0c7a]/20 p-8 rounded-2xl border border-[#7784e4]/20 backdrop-blur-sm overflow-hidden">
               {/* Decorative elements */}
               <div className="absolute -top-10 -right-10 w-20 h-20 bg-[#1b1ac7]/20 rounded-full filter blur-xl"></div>
               <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-[#a78bfa]/20 rounded-full filter blur-xl"></div>
@@ -283,6 +252,7 @@ const ContactSection = () => {
               </p>
             </div>
           </div>
+          </ScrollAnimation>
         </div>
       </div>
     </section>

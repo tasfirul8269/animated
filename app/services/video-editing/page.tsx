@@ -120,7 +120,7 @@ export default function VideoEditingPage() {
         description="Professional editing services for all types of video content"
         content={
           <div className="space-y-6">
-            <p>Our expert team delivers professional video editing and motion graphics services tailored to your needs. Whether you're looking for engaging social media content, professional product promos, or cinematic wedding videos, we bring your vision to life with creativity and technical excellence.</p>
+            <p>Our expert team delivers professional video editing and motion graphics services tailored to your needs. Whether you&apos;re looking for engaging social media content, professional product promos, or cinematic wedding videos, we bring your vision to life with creativity and technical excellence.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <div className="space-y-2">

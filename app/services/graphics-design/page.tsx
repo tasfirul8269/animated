@@ -102,10 +102,10 @@ export default function GraphicsDesignPage() {
       
       <ServiceDescription
         title="Comprehensive Design Solutions"
-        description="From concept to final design, we've got you covered"
+        description="From concept to final design, we&apos;ve got you covered"
         content={
           <div className="space-y-6">
-            <p>Our expert design team delivers professional graphics solutions tailored to your needs. Whether you're looking for a stunning logo, engaging social media content, or professional print materials, we combine creativity with technical expertise to bring your vision to life.</p>
+            <p>Our expert design team delivers professional graphics solutions tailored to your needs. Whether you&apos;re looking for a stunning logo, engaging social media content, or professional print materials, we combine creativity with technical expertise to bring your vision to life.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="space-y-2">

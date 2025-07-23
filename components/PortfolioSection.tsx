@@ -10,6 +10,29 @@ const PortfolioSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  
+  // Generate particles effect similar to HeroSection
+  const [particles, setParticles] = useState<Array<{
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+    delay: number;
+    duration: number;
+  }>>([]);
+
+  useEffect(() => {
+    // Generate particles on client side
+    const newParticles = Array.from({ length: 20 }, () => ({
+      width: Math.random() * 5 + 2,
+      height: Math.random() * 5 + 2,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: Math.random() * 10 + 5,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -58,11 +81,56 @@ const PortfolioSection = () => {
   // No scroll-based effects needed
 
   return (
-    <section ref={sectionRef} className="section-container relative bg-[#0a0613] py-20">
+    <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-[#0a0613] to-[#0c0c7a]/10">
+      {/* Animated particles */}
+      <div className="absolute inset-0 z-0">
+        {particles.map((particle, index) => (
+          <div
+            key={index}
+            className="particle"
+            style={{
+              width: `${particle.width}px`,
+              height: `${particle.height}px`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.delay}s`,
+              animationDuration: `${particle.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Mesh gradient blobs */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div
+          className="absolute"
+          style={{
+            top: '10%',
+            left: '5%',
+            width: '400px',
+            height: '400px',
+            background: 'radial-gradient(circle at 30% 30%, #a78bfa 0%, transparent 70%)',
+            opacity: 0.7,
+            filter: 'blur(80px)'
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            bottom: '0%',
+            right: '10%',
+            width: '350px',
+            height: '350px',
+            background: 'radial-gradient(circle at 70% 70%, #1b1ac7 0%, transparent 70%)',
+            opacity: 0.6,
+            filter: 'blur(80px)'
+          }}
+        />
+      </div>
       {/* Static background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0c0c7a]/5 to-transparent"></div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-10">
         <ScrollAnimation duration={0.7} delay={0.1} direction="up" once={false}>
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">

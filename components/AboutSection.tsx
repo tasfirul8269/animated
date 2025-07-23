@@ -1,10 +1,33 @@
 'use client';
 
 import { Award, Users, Zap, Target } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import ScrollAnimation from './ScrollAnimation';
 import StaggerItem from './StaggerItem';
 
 const AboutSection = () => {
+  // Generate particles effect similar to HeroSection
+  const [particles, setParticles] = useState<Array<{
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+    delay: number;
+    duration: number;
+  }>>([]);
+
+  useEffect(() => {
+    // Generate particles on client side
+    const newParticles = Array.from({ length: 20 }, () => ({
+      width: Math.random() * 5 + 2,
+      height: Math.random() * 5 + 2,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: Math.random() * 10 + 5,
+    }));
+    setParticles(newParticles);
+  }, []);
   const stats = [
     { number: "150+", label: "Projects Completed", icon: <Award className="w-6 h-6" /> },
     { number: "50+", label: "Happy Clients", icon: <Users className="w-6 h-6" /> },
@@ -13,14 +36,54 @@ const AboutSection = () => {
   ];
 
   return (
-    <section className="section-container relative">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-64 h-64 border border-[#7784e4]/20 rounded-full"></div>
-        <div className="absolute bottom-20 right-10 w-48 h-48 border border-[#1b1ac7]/20 rounded-full"></div>
+    <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-[#0a0613] to-[#0c0c7a]/10">
+      {/* Animated particles */}
+      <div className="absolute inset-0 z-0">
+        {particles.map((particle, index) => (
+          <div
+            key={index}
+            className="particle"
+            style={{
+              width: `${particle.width}px`,
+              height: `${particle.height}px`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.delay}s`,
+              animationDuration: `${particle.duration}s`,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="container mx-auto px-4">
+      {/* Mesh gradient blobs */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div
+          className="absolute"
+          style={{
+            top: '10%',
+            left: '5%',
+            width: '400px',
+            height: '400px',
+            background: 'radial-gradient(circle at 30% 30%, #a78bfa 0%, transparent 70%)',
+            opacity: 0.7,
+            filter: 'blur(80px)'
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            bottom: '0%',
+            right: '10%',
+            width: '350px',
+            height: '350px',
+            background: 'radial-gradient(circle at 70% 70%, #1b1ac7 0%, transparent 70%)',
+            opacity: 0.6,
+            filter: 'blur(80px)'
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <ScrollAnimation duration={0.7} delay={0.1} direction="up" once={false}>
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">

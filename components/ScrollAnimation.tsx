@@ -1,15 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useState, ReactNode } from 'react';
-import { motion, useAnimation, Variant } from 'framer-motion';
+import { motion, useAnimation, Variant, Variants } from 'framer-motion';
 
 interface ScrollAnimationProps {
   children: ReactNode;
   threshold?: number;
-  variants?: {
-    hidden: Variant;
-    visible: Variant;
-  };
+  variants?: Variants;
   className?: string;
   delay?: number;
   direction?: 'up' | 'down' | 'left' | 'right';
@@ -38,7 +35,7 @@ export default function ScrollAnimation({
   const [hasAnimated, setHasAnimated] = useState(false);
   
   // Define default animation variants based on direction
-  const getDefaultVariants = () => {
+  const getDefaultVariants = (): Variants => {
     // For reduced motion mode, use simpler animations
     if (reduceMotion) {
       return {

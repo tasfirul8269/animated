@@ -1,15 +1,12 @@
 "use client";
 
 import { ReactNode } from 'react';
-import { motion, Variant } from 'framer-motion';
+import { motion, Variant, Variants } from 'framer-motion';
 
 interface StaggerItemProps {
   children: ReactNode;
   className?: string;
-  variants?: {
-    hidden: Variant;
-    visible: Variant;
-  };
+  variants?: Variants;
   delay?: number;
   index?: number;
 }
@@ -22,7 +19,7 @@ export default function StaggerItem({
   index = 0,
 }: StaggerItemProps) {
   // Default variants for child elements in a staggered animation
-  const defaultVariants = {
+  const defaultVariants: Variants = {
     hidden: {
       opacity: 0,
       y: 20,

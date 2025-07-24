@@ -63,6 +63,24 @@ const portfolioItems = [
     description: "High-quality product renders for marketing and advertising.",
     tech: ["Cinema 4D", "KeyShot", "Illustrator"],
     image: "https://images.pexels.com/photos/1212405/pexels-photo-1212405.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "3D Character Design",
+    description: "Custom 3D character creation for games and animations.",
+    tech: ["ZBrush", "Maya", "Substance Painter"],
+    image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Medical Animation",
+    description: "Accurate 3D medical visualizations for education and training.",
+    tech: ["Maya", "Blender", "After Effects"],
+    image: "https://images.pexels.com/photos/356040/pexels-photo-356040.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "3D Environment Design",
+    description: "Immersive 3D environments for games and virtual reality.",
+    tech: ["Unreal Engine", "Blender", "Substance Painter"],
+    image: "https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
   }
 ];
 

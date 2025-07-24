@@ -88,6 +88,24 @@ const portfolioItems = [
     description: "Eye-catching graphics for a successful social media marketing campaign.",
     tech: ["Canva", "Photoshop", "Illustrator"],
     image: "https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Product Packaging",
+    description: "Innovative packaging design that stands out on the shelves.",
+    tech: ["Illustrator", "InDesign", "Dimension"],
+    image: "https://images.pexels.com/photos/2536965/pexels-photo-2536965.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "UI/UX Design",
+    description: "Intuitive user interface design for web and mobile applications.",
+    tech: ["Figma", "Sketch", "Adobe XD"],
+    image: "https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Print Advertisement",
+    description: "Creative print ads for magazines and outdoor advertising.",
+    tech: ["InDesign", "Photoshop", "Illustrator"],
+    image: "https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
   }
 ];
 

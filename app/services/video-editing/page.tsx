@@ -84,7 +84,7 @@ const features = [
   }
 ];
 
-// Motion Graphics portfolio items
+// Video Editing portfolio items
 const portfolioItems = [
   {
     title: "Brand Animation",
@@ -103,6 +103,24 @@ const portfolioItems = [
     description: "Series of short animated clips for social media marketing campaign.",
     tech: ["After Effects", "Photoshop", "Audition"],
     image: "https://images.pexels.com/photos/3943883/pexels-photo-3943883.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Corporate Video Production",
+    description: "Professional corporate video highlighting company culture and values.",
+    tech: ["Premiere Pro", "DaVinci Resolve", "Audition"],
+    image: "https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Product Demo Video",
+    description: "Showcase video for a new product launch with dynamic visuals.",
+    tech: ["After Effects", "Cinema 4D", "Premiere Pro"],
+    image: "https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    title: "Event Highlights Reel",
+    description: "Compelling highlights reel from a major industry conference.",
+    tech: ["Premiere Pro", "After Effects", "Audition"],
+    image: "https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
   }
 ];
 
